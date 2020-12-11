@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoinbitBackend.Entities
@@ -19,5 +20,7 @@ namespace CoinbitBackend.Entities
 
         [Required]
         public UserRole UserRoles { get; set; }
+
+        public DateTime createDate { get; set; }
     }
 }
