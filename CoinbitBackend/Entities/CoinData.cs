@@ -19,8 +19,7 @@ namespace CoinbitBackend.Entities
         [StringLength(50)]
         public string Symbol { get; set; }
         [Required]
-        [StringLength(50)]
-        public string Rank { get; set; }
+        public long Ranking { get; set; }
         public double Price { get; set; }
         public double Volume24hUsd { get; set; }
         public double MarketCapUsd { get; set; }

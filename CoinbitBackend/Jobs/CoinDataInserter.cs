@@ -33,7 +33,7 @@ namespace CoinbitBackend.Jobs
                     CoinId = item.Id,
                     Name = item.Name,
                     Symbol = item.Symbol,
-                    Rank = item.Rank,
+                    Ranking = item.Rank.ToLong(),
                     Price = item.Price,
                     Volume24hUsd = item.Volume24hUsd,
                     MarketCapUsd = item.MarketCapUsd,
