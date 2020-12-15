@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinbitBackend", "CoinbitBackend\CoinbitBackend.csproj", "{30E609D4-4602-49F1-BBCA-A821997B1832}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoinbitBackend", "CoinbitBackend\CoinbitBackend.csproj", "{30E609D4-4602-49F1-BBCA-A821997B1832}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBCurrenciesFetcher", "CBCurrenciesFetcher\CBCurrenciesFetcher.csproj", "{26FE7CF1-1C3F-4A72-9D55-FDBE134F88C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBCoinsFetcher", "CBCoinsFetcher\CBCoinsFetcher.csproj", "{463A0471-8E40-4D82-9DAE-BFD1B0C057D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{30E609D4-4602-49F1-BBCA-A821997B1832}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30E609D4-4602-49F1-BBCA-A821997B1832}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30E609D4-4602-49F1-BBCA-A821997B1832}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26FE7CF1-1C3F-4A72-9D55-FDBE134F88C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26FE7CF1-1C3F-4A72-9D55-FDBE134F88C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26FE7CF1-1C3F-4A72-9D55-FDBE134F88C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26FE7CF1-1C3F-4A72-9D55-FDBE134F88C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{463A0471-8E40-4D82-9DAE-BFD1B0C057D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{463A0471-8E40-4D82-9DAE-BFD1B0C057D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{463A0471-8E40-4D82-9DAE-BFD1B0C057D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{463A0471-8E40-4D82-9DAE-BFD1B0C057D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,3 +1,4 @@
+using CBCurrenciesFetcher;
 using CoinbitBackend.Infrastructure;
 using CoinbitBackend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -66,6 +67,7 @@ namespace CoinbitBackend
             services.AddSingleton<IJwtAuthManager, JwtAuthManager>();
             services.AddHostedService<JwtRefreshTokenCache>();
             services.AddScoped<IUserService, UserService>();
+            services.AddSingleton(obj => new CurrencyFetcher(Configuration.GetValue("GoldApiUrl", string.Empty), Configuration.GetValue("CurrencyApiUrl", string.Empty)));
 
             services.AddSwaggerGen(c =>
             {

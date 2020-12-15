@@ -42,8 +42,5 @@ namespace CoinbitBackend.Controllers
                 return new CoreResponse() { devMessage = ex.GetaAllMessages(), data = request, isSuccess = false };
             }
         }
-
-
-
     }
 }
