@@ -1,7 +1,9 @@
 using CBCoinsFetcher;
 using CBCurrenciesFetcher;
 using CoinbitBackend.Infrastructure;
+using CoinbitBackend.Jobs;
 using CoinbitBackend.Services;
+using Coravel;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -42,6 +44,7 @@ namespace CoinbitBackend
             //services.AddHttpsRedirection(options => options.HttpsPort = 5001);
 
             services.AddEntityFrameworkNpgsql().AddDbContext<DBRepository>(opt => opt.UseNpgsql(Configuration.GetConnectionString("MyWebApiConection")));
+            services.AddSingleton(obj => new DBDapperRepository(Configuration.GetConnectionString("MyWebApiConection")));
 
             var jwtTokenConfig = Configuration.GetSection("jwtTokenConfig").Get<JwtTokenConfig>();
             services.AddSingleton(jwtTokenConfig);
@@ -70,6 +73,8 @@ namespace CoinbitBackend
             services.AddScoped<IUserService, UserService>();
             services.AddSingleton(obj => new CurrencyFetcher(Configuration.GetValue("GoldApiUrl", string.Empty), Configuration.GetValue("CurrencyApiUrl", string.Empty)));
             services.AddSingleton(obj => new CoinsFetcher(Configuration.GetValue("CoinApiKey", string.Empty), Configuration.GetValue<int>("CoinCount", 100)));
+            services.AddScheduler();
+            services.AddTransient<CoinDataInserter>();
 
             services.AddSwaggerGen(c =>
             {
@@ -122,6 +127,13 @@ namespace CoinbitBackend
             app.UseCors("AllowAll");
             app.UseAuthentication();
             app.UseAuthorization();
+
+            var provider = app.ApplicationServices;
+            provider.UseScheduler(scheduler =>
+            {
+                scheduler.Schedule<CoinDataInserter>().EveryFiveMinutes();
+            });
+
 
             app.UseEndpoints(endpoints =>
             {

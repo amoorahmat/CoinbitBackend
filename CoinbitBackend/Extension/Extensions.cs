@@ -7,6 +7,18 @@ namespace CoinbitBackend.Extension
 {
     public static class Extensions
     {
+        public static long ToLong(this object obj)
+        {
+            try
+            {
+                return Convert.ToInt64(obj);
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
         public static IEnumerable<TSource> FromHierarchy<TSource>(
     this TSource source,
     Func<TSource, TSource> nextItem,

@@ -14,14 +14,17 @@ namespace CoinbitBackend.Services
                 .IsRequired();
 
             modelBuilder.Entity<Customer>().Property(e => e.createDate)
+                .HasColumnType("timestamp with time zone")
                 .HasDefaultValueSql("NOW()")
                 .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<User>().Property(e => e.createDate)
+                .HasColumnType("timestamp with time zone")
                 .HasDefaultValueSql("NOW()")
                 .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<CoinData>().Property(e => e.createDate)
+                .HasColumnType("timestamp with time zone")
                 .HasDefaultValueSql("NOW()")
                 .ValueGeneratedOnAdd();
         }

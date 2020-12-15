@@ -33,7 +33,7 @@ namespace CoinbitBackend.Entities
         [StringLength(50)]
         public string ConvertCurrency { get; set; }
         public DateTime createDate { get; set; }
-        public long Series { get; set; }
+        public DateTime SeriesDate { get; set; }
     }
 
 }
