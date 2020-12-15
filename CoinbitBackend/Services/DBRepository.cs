@@ -20,11 +20,16 @@ namespace CoinbitBackend.Services
             modelBuilder.Entity<User>().Property(e => e.createDate)
                 .HasDefaultValueSql("NOW()")
                 .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<CoinData>().Property(e => e.createDate)
+                .HasDefaultValueSql("NOW()")
+                .ValueGeneratedOnAdd();
         }
 
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<CoinData> CoinDatas { get; set; }
 
     }
 }

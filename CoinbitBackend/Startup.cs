@@ -1,3 +1,4 @@
+using CBCoinsFetcher;
 using CBCurrenciesFetcher;
 using CoinbitBackend.Infrastructure;
 using CoinbitBackend.Services;
@@ -68,6 +69,7 @@ namespace CoinbitBackend
             services.AddHostedService<JwtRefreshTokenCache>();
             services.AddScoped<IUserService, UserService>();
             services.AddSingleton(obj => new CurrencyFetcher(Configuration.GetValue("GoldApiUrl", string.Empty), Configuration.GetValue("CurrencyApiUrl", string.Empty)));
+            services.AddSingleton(obj => new CoinsFetcher(Configuration.GetValue("CoinApiKey", string.Empty), Configuration.GetValue<int>("CoinCount", 100)));
 
             services.AddSwaggerGen(c =>
             {
