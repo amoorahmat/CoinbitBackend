@@ -101,11 +101,11 @@ namespace CoinbitBackend
                 });
             });
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll",
-                    builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
-            });
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("AllowAll",
+            //        builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
+            //});
 
         }
 
@@ -124,7 +124,7 @@ namespace CoinbitBackend
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CoinbitBackend v1"));
 
             app.UseRouting();
-            app.UseCors("AllowAll");
+            //app.UseCors("AllowAll");
             app.UseAuthentication();
             app.UseAuthorization();
 
