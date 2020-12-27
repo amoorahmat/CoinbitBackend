@@ -1,4 +1,5 @@
-﻿using CoinbitBackend.Services;
+﻿using CoinbitBackend.Entities;
+using CoinbitBackend.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,10 +12,12 @@ namespace CoinbitBackend.Controllers
     [Route("api/[controller]")]
     public class CoinController : Controller
     {
-        private DBRepository _dBRepository;
-        public CoinController(DBRepository dBRepository)
+        private DBRepository dBRepository;
+        private CacheManager cacheManager;
+        public CoinController(DBRepository dBRepository, CacheManager cacheManager)
         {
-            _dBRepository = dBRepository;
+            this.dBRepository = dBRepository;
+            this.cacheManager = cacheManager;
         }
 
 
@@ -28,9 +31,14 @@ namespace CoinbitBackend.Controllers
                     return BadRequest();
                 }
 
-                var result = _dBRepository.CoinDatas.AsNoTracking().OrderByDescending(u => u.SeriesDate).ThenBy(u => u.Ranking).Take(150);
-                return Ok(result);
-
+                var cachedata = cacheManager.GetCoinLog();
+                if (cachedata != null && cachedata.Count() > 0)
+                    return Ok(cachedata);
+                else
+                {
+                    var result = dBRepository.CoinDatas.AsNoTracking().OrderByDescending(u => u.SeriesDate).ThenBy(u => u.Ranking).Take(150).ConvertToCoinDataView();
+                    return Ok(result);
+                }
             }
             catch (Exception ex)
             {

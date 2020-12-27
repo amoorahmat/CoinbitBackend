@@ -75,6 +75,7 @@ namespace CoinbitBackend
             services.AddSingleton(obj => new CoinsFetcher(Configuration.GetValue("CoinApiKey", string.Empty), Configuration.GetValue<int>("CoinCount", 100)));
             services.AddScheduler();
             services.AddTransient<CoinDataInserter>();
+            services.AddSingleton<CacheManager>();
 
             services.AddSwaggerGen(c =>
             {
@@ -139,7 +140,7 @@ namespace CoinbitBackend
             var provider = app.ApplicationServices;
             provider.UseScheduler(scheduler =>
             {
-                scheduler.Schedule<CoinDataInserter>().EveryFiveMinutes();
+                scheduler.Schedule<CoinDataInserter>().EverySeconds(23);
             });
 
 

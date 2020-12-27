@@ -11,18 +11,20 @@ namespace CoinbitBackend.Jobs
 {
     public class CoinDataInserter : IInvocable
     {
-        private CoinsFetcher _coinsFetcher;
-        private DBRepository _dBRepository;
+        private CoinsFetcher coinsFetcher;
+        private DBRepository dBRepository;
+        private CacheManager cacheManager;
 
-        public CoinDataInserter(CoinsFetcher coinsFetcher, DBRepository dBRepository)
+        public CoinDataInserter(CoinsFetcher coinsFetcher, DBRepository dBRepository, CacheManager cacheManager)
         {
-            _coinsFetcher = coinsFetcher;
-            _dBRepository = dBRepository;
+            this.coinsFetcher = coinsFetcher;
+            this.dBRepository = dBRepository;
+            this.cacheManager = cacheManager;
         }
 
         public async Task Invoke()
         {
-            var datalst = _coinsFetcher.GetCoinData();
+            var datalst = coinsFetcher.GetCoinData();
             var seriesDate = DateTime.Now;
 
             var insertData = new List<CoinData>();
@@ -47,8 +49,9 @@ namespace CoinbitBackend.Jobs
                 });
             }
 
-            await _dBRepository.AddRangeAsync(insertData);
-            await _dBRepository.SaveChangesAsync();
+            cacheManager.AddCoinLog(insertData);
+            await dBRepository.AddRangeAsync(insertData);
+            await dBRepository.SaveChangesAsync();
         }
     }
 }
