@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace CoinbitBackend.Entities
 {
     public static class Conversion
     {
-        public static IEnumerable<CoinDataViewModel> ConvertToCoinDataView(this IEnumerable<CoinData> coinDatas)
+        public static IEnumerable<CoinDataViewModel> ConvertToCoinDataView(this IEnumerable<CoinData> coinDatas,int tetherprice)
         {
             foreach (var item in coinDatas)
             {
@@ -29,7 +26,9 @@ namespace CoinbitBackend.Entities
                     ConvertCurrency = item.ConvertCurrency,
                     createDate = item.createDate,
                     SeriesDate = item.SeriesDate,
-                    IsFav = item.IsFav
+                    IsFav = item.IsFav,
+                    TetherPriceInRial = tetherprice,
+                    CoinPriceInRial = (tetherprice * item.Price)
                 };
             }
         }

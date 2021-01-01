@@ -12,5 +12,7 @@ namespace CoinbitBackend.Entities
                 return str.ToString();
             }
         }
+        public int? TetherPriceInRial { get; set; } 
+        public double? CoinPriceInRial { get; set; }    
     }
 }

@@ -30,8 +30,9 @@ namespace CoinbitBackend.Jobs
             var seriesDate = DateTime.Now;
 
             var insertData = new List<CoinData>();
+            
             var favlist = await dBRepository.FavCoins.AsNoTracking().ToListAsync();
-           
+
             foreach (var item in datalst)
             {
                 insertData.Add(new CoinData()

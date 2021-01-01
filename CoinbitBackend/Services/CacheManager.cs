@@ -7,11 +7,11 @@ namespace CoinbitBackend.Services
 {
     public class CacheManager
     {
-        private List<CoinDataViewModel> CoinDatas;
+        private List<CoinData> CoinDatas;
 
         public CacheManager()
         {
-            CoinDatas = new List<CoinDataViewModel>();
+            CoinDatas = new List<CoinData>();
         }
 
         public void AddCoinLog(IEnumerable<CoinData> coinDatas)
@@ -19,8 +19,8 @@ namespace CoinbitBackend.Services
             try
             {
                 this.CoinDatas = null;
-                this.CoinDatas = new List<CoinDataViewModel>();
-                this.CoinDatas.AddRange(coinDatas.ConvertToCoinDataView());
+                this.CoinDatas = new List<CoinData>();
+                this.CoinDatas.AddRange(coinDatas);
             }
             catch (Exception ex)
             {
@@ -29,7 +29,7 @@ namespace CoinbitBackend.Services
         }
 
 
-        public List<CoinDataViewModel> GetCoinLog()
+        public List<CoinData> GetCoinLog()
         {
             try
             {
@@ -42,7 +42,7 @@ namespace CoinbitBackend.Services
             }
         }
 
-        public CoinDataViewModel GetCoinBySymbol(string symbol)
+        public CoinData GetCoinBySymbol(string symbol)
         {
             try
             {
