@@ -19,8 +19,8 @@ namespace CoinbitBackend.Entities
         public string Password { get; set; }
 
         [Required]
-        public UserRole UserRoles { get; set; }
-
+        public int UserRole { get; set; }
+            
         public DateTime createDate { get; set; }
     }
 }

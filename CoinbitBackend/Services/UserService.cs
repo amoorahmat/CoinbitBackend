@@ -48,19 +48,25 @@ namespace CoinbitBackend.Services
 
         public string GetUserRole(string userName)
         {
-            if (!IsAnExistingUser(userName))
+            var user = _dBRepository.Users.FirstOrDefault(l => l.UserName == userName);
+
+            if (user == null)
             {
                 return string.Empty;
             }
 
-            return "user";
-
-            //if (userName == "admin")
-            //{
-            //    return UserRole.Admin;
-            //}
-
-            //return UserRole.BasicUser;
+            switch (user.UserRole)
+            {
+                case 1:
+                    return "admin";
+                case 2:
+                    return "customer";
+                case 3:
+                    return "acc";
+                default:
+                    return "customer";
+            }
+            
         }
     }
 

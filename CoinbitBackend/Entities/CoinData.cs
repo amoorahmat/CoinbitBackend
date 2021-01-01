@@ -33,6 +33,8 @@ namespace CoinbitBackend.Entities
         public string ConvertCurrency { get; set; }
         public DateTime createDate { get; set; }
         public DateTime SeriesDate { get; set; }
+        [Required]
+        public bool IsFav { get; set; } 
     }
 
 }

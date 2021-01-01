@@ -28,7 +28,8 @@ namespace CoinbitBackend.Entities
                     MarketCapConvert = item.MarketCapConvert,
                     ConvertCurrency = item.ConvertCurrency,
                     createDate = item.createDate,
-                    SeriesDate = item.SeriesDate
+                    SeriesDate = item.SeriesDate,
+                    IsFav = item.IsFav
                 };
             }
         }

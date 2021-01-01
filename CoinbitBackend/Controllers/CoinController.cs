@@ -1,7 +1,6 @@
 ﻿using CoinbitBackend.Entities;
 using CoinbitBackend.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,11 +12,13 @@ namespace CoinbitBackend.Controllers
     public class CoinController : Controller
     {
         private DBRepository dBRepository;
+        private DBDapperRepository dBDapperRepository;
         private CacheManager cacheManager;
-        public CoinController(DBRepository dBRepository, CacheManager cacheManager)
+        public CoinController(DBRepository dBRepository, CacheManager cacheManager,DBDapperRepository dBDapperRepository)
         {
             this.dBRepository = dBRepository;
             this.cacheManager = cacheManager;
+            this.dBDapperRepository = dBDapperRepository;
         }
 
 
@@ -36,8 +37,8 @@ namespace CoinbitBackend.Controllers
                     return Ok(cachedata);
                 else
                 {
-                    var result = dBRepository.CoinDatas.AsNoTracking().OrderByDescending(u => u.SeriesDate).ThenBy(u => u.Ranking).Take(150).ConvertToCoinDataView();
-                    return Ok(result);
+                    var lst = await dBDapperRepository.RunQueryAsync<CoinData>(" WITH lastseriesdate AS (   SELECT \"SeriesDate\"    FROM public.\"CoinDatas\"   order by \"Id\" desc	limit 1) SELECT * FROM public.\"CoinDatas\" WHERE \"SeriesDate\" = (SELECT \"SeriesDate\" FROM lastseriesdate) ");                    
+                    return Ok(lst.ConvertToCoinDataView());
                 }
             }
             catch (Exception ex)
@@ -46,5 +47,37 @@ namespace CoinbitBackend.Controllers
             }
         }
 
+
+        [HttpGet("getfav")]
+        public async Task<ActionResult> GetCoinDataFav()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+
+                var cachedata = cacheManager.GetCoinLog();
+                if (cachedata != null && cachedata.Count() > 0)
+                    return Ok(cachedata.Where(p => p.IsFav).ToList());
+                else
+                {
+                    //var lst = dBDapperRepository.RunQuery<CoinData>(" WITH lastseriesdate AS ( SELECT \"SeriesDate\" FROM public.\"CoinDatas\" order by \"Id\" desc limit 1 ) SELECT * FROM public.\"CoinDatas\" WHERE \"SeriesDate\" = (SELECT \"SeriesDate\" FROM lastseriesdate) AND  \"IsFav\" = true; ");
+                    var lst = await dBDapperRepository.RunQueryAsync<CoinData>(" WITH lastseriesdate AS ( SELECT \"SeriesDate\" FROM public.\"CoinDatas\" order by \"Id\" desc limit 1 ) SELECT * FROM public.\"CoinDatas\" WHERE \"SeriesDate\" = (SELECT \"SeriesDate\" FROM lastseriesdate) AND  \"IsFav\" = true; ");
+                    if (lst != null)
+                    {
+                        var result = lst.ConvertToCoinDataView();
+                        return Ok(result);
+                    }
+
+                    return NoContent();
+                }
+            }
+            catch (Exception ex)
+            {
+                return NoContent();
+            }
+        }
     }
 }

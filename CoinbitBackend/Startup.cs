@@ -140,7 +140,8 @@ namespace CoinbitBackend
             var provider = app.ApplicationServices;
             provider.UseScheduler(scheduler =>
             {
-                scheduler.Schedule<CoinDataInserter>().EverySeconds(23);
+                scheduler.Schedule<CoinDataInserter>().EverySeconds(23);//real
+                //scheduler.Schedule<CoinDataInserter>().EverySeconds(10);//test
             });
 
 

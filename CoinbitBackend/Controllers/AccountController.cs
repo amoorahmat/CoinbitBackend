@@ -14,8 +14,7 @@ using System.Threading.Tasks;
 
 namespace CoinbitBackend.Controllers
 {
-    [ApiController]
-    [Authorize]
+    [ApiController]    
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {

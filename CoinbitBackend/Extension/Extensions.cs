@@ -44,5 +44,13 @@ namespace CoinbitBackend.Extension
                 .Select(ex => ex.Message);
             return String.Join(Environment.NewLine, messages);
         }
+
+
+        public static HashSet<T> ToHashSet<T>(
+        this IEnumerable<T> source,
+        IEqualityComparer<T> comparer = null)
+        {
+            return new HashSet<T>(source, comparer);
+        }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using CoinbitBackend.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CoinbitBackend.Migrations
 {
     [DbContext(typeof(DBRepository))]
-    partial class DBRepositoryModelSnapshot : ModelSnapshot
+    [Migration("20210101122411_favcoin")]
+    partial class favcoin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,9 +37,6 @@ namespace CoinbitBackend.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
-
-                    b.Property<bool>("IsFav")
-                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("timestamp without time zone");
@@ -208,7 +207,7 @@ namespace CoinbitBackend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int>("UserRole")
+                    b.Property<int?>("UserRolesId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("createDate")
@@ -217,6 +216,8 @@ namespace CoinbitBackend.Migrations
                         .HasDefaultValueSql("NOW()");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserRolesId");
 
                     b.ToTable("Users");
                 });
@@ -236,6 +237,15 @@ namespace CoinbitBackend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("CoinbitBackend.Entities.User", b =>
+                {
+                    b.HasOne("CoinbitBackend.Entities.UserRole", "UserRoles")
+                        .WithMany()
+                        .HasForeignKey("UserRolesId");
+
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,8 +3,10 @@ using CoinbitBackend.Entities;
 using CoinbitBackend.Extension;
 using CoinbitBackend.Services;
 using Coravel.Invocable;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CoinbitBackend.Jobs
@@ -28,6 +30,8 @@ namespace CoinbitBackend.Jobs
             var seriesDate = DateTime.Now;
 
             var insertData = new List<CoinData>();
+            var favlist = await dBRepository.FavCoins.AsNoTracking().ToListAsync();
+           
             foreach (var item in datalst)
             {
                 insertData.Add(new CoinData()
@@ -45,7 +49,8 @@ namespace CoinbitBackend.Jobs
                     LastUpdated = item.LastUpdated,
                     MarketCapConvert = item.MarketCapConvert,
                     ConvertCurrency = item.ConvertCurrency,
-                    SeriesDate = seriesDate
+                    SeriesDate = seriesDate,
+                    IsFav = favlist.Any(j => j.CoinId == item.Id)
                 });
             }
 

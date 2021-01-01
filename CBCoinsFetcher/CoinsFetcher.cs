@@ -15,7 +15,7 @@ namespace CBCoinsFetcher
         }
 
         public IEnumerable<Currency> GetCoinData()
-        {
+        {    
             return ((ICoinmarketcapClient)new CoinmarketcapClient(_apiKey)).GetCurrencies(_count);
         }
     }
