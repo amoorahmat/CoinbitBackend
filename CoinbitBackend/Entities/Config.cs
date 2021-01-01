@@ -10,7 +10,6 @@ namespace CoinbitBackend.Entities
         public long Id { get; set; }
 
         [Required]
-        [StringLength(50)]
         public int TetherRialValue { get; set; }      
     }
 }

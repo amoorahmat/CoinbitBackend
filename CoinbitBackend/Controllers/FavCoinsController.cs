@@ -14,7 +14,6 @@ namespace CoinbitBackend.Controllers
     [ApiController]
     [Authorize(Roles = "admin")]
     [Route("api/[controller]")]
-
     public class FavCoinsController : Controller
     {
         DBRepository _dBRepository;
@@ -25,7 +24,7 @@ namespace CoinbitBackend.Controllers
         }
 
         [HttpGet("getall")]
-        public async Task<ActionResult> GetFavCoins()
+        public async Task<object> GetFavCoins()
         {
             try
             {
@@ -40,7 +39,7 @@ namespace CoinbitBackend.Controllers
             }
             catch (Exception ex)
             {
-                return NoContent();
+                return new CoreResponse() { devMessage = ex.GetaAllMessages(), data = null, isSuccess = false };
             }
         }
 

@@ -27,6 +27,11 @@ namespace CoinbitBackend.Services
                 .HasColumnType("timestamp with time zone")
                 .HasDefaultValueSql("NOW()")
                 .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.UserName)
+                .IsUnique();
+
         }
 
         public DbSet<UserRole> UserRoles { get; set; }
