@@ -3,15 +3,17 @@ using System;
 using CoinbitBackend.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CoinbitBackend.Migrations
 {
     [DbContext(typeof(DBRepository))]
-    partial class DBRepositoryModelSnapshot : ModelSnapshot
+    [Migration("20210121105115_customerstatus")]
+    partial class customerstatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,9 +113,6 @@ namespace CoinbitBackend.Migrations
                         .HasColumnType("bigint")
                         .UseIdentityByDefaultColumn();
 
-                    b.Property<int>("StatusId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("address")
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
@@ -173,16 +172,14 @@ namespace CoinbitBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StatusId");
-
                     b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("CoinbitBackend.Entities.CustomerStatus", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("bigint")
                         .UseIdentityByDefaultColumn();
 
                     b.Property<string>("Title")
@@ -190,7 +187,7 @@ namespace CoinbitBackend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CustomerStatus");
+                    b.ToTable("CustomerStatuses");
                 });
 
             modelBuilder.Entity("CoinbitBackend.Entities.FavCoins", b =>
@@ -258,17 +255,6 @@ namespace CoinbitBackend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserRoles");
-                });
-
-            modelBuilder.Entity("CoinbitBackend.Entities.Customer", b =>
-                {
-                    b.HasOne("CoinbitBackend.Entities.CustomerStatus", "CustomerStatus")
-                        .WithMany()
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CustomerStatus");
                 });
 #pragma warning restore 612, 618
         }

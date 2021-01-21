@@ -50,5 +50,11 @@ namespace CoinbitBackend.Entities
         public string postalCode { get; set; }
 
         public DateTime createDate { get; set; }
+
+        public int StatusId { get; set; }
+
+        [ForeignKey("StatusId")]   
+        public CustomerStatus CustomerStatus { get; set; }
     }
 }
+    

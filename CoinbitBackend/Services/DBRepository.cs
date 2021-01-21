@@ -37,6 +37,7 @@ namespace CoinbitBackend.Services
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<CustomerStatus> CustomerStatus { get; set; } 
         public DbSet<CoinData> CoinDatas { get; set; }
         public DbSet<FavCoins> FavCoins { get; set; }
         public DbSet<Config> Config { get; set; }   

@@ -45,19 +45,20 @@ namespace CoinbitBackend.Controllers
                 return Unauthorized();
             }
 
-            var role = _userService.GetUserRole(request.UserName);
+            var idrole = _userService.GetUserIDAndRole(request.UserName);
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name,request.UserName),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Role, idrole.Item2)
             };
 
             var jwtResult = _jwtAuthManager.GenerateTokens(request.UserName, claims, DateTime.Now);
             _logger.LogInformation($"User [{request.UserName}] logged in the system.");
             return Ok(new LoginResult
             {
+                UserID = idrole.Item1.ToString(),
                 UserName = request.UserName,
-                Role = role,
+                Role = idrole.Item2,
                 AccessToken = jwtResult.AccessToken,
                 RefreshToken = jwtResult.RefreshToken.TokenString
             });

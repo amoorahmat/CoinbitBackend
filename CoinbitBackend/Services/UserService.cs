@@ -11,6 +11,7 @@ namespace CoinbitBackend.Services
         bool IsAnExistingUser(string userName);
         bool IsValidUserCredentials(string userName, string password);
         string GetUserRole(string userName);
+        Tuple<int, string> GetUserIDAndRole(string userName);
     }
 
     public class UserService : IUserService
@@ -67,6 +68,42 @@ namespace CoinbitBackend.Services
                     return "customer";
             }
             
+        }
+
+        public Tuple<int, string> GetUserIDAndRole(string userName)
+        {
+
+            var user = _dBRepository.Users.FirstOrDefault(l => l.UserName == userName);
+            var result = new Tuple<int, string>(0, string.Empty);
+
+            if (user == null)
+            {
+                return result;
+            }
+
+            switch (user.UserRole)
+            {
+                case 1:
+                    result = new Tuple<int, string>(user.Id, "admin");
+                    break;
+                case 2:
+                    result = new Tuple<int, string>(user.Id, "gymboss");
+                    break;
+                case 3:
+                    result = new Tuple<int, string>(user.Id, "gymstaff");
+                    break;
+                case 4:
+                    result = new Tuple<int, string>(user.Id, "client");
+                    break;
+                case 5:
+                    result = new Tuple<int, string>(user.Id, "coach");
+                    break;
+                default:
+                    result = new Tuple<int, string>(user.Id, "client");
+                    break;
+            }
+
+            return result;
         }
     }
 

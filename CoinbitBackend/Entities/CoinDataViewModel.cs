@@ -1,4 +1,4 @@
-﻿using MD.PersianDateTime;
+﻿using MD.PersianDateTime.Standard;
 
 namespace CoinbitBackend.Entities
 {

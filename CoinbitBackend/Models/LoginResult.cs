@@ -4,6 +4,9 @@ namespace CoinbitBackend.Models
 {
     public class LoginResult
     {
+        [JsonPropertyName("userid")]
+        public string UserID { get; set; }
+
         [JsonPropertyName("username")]
         public string UserName { get; set; }
 
