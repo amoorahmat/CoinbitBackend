@@ -40,7 +40,8 @@ namespace CoinbitBackend.Services
         public DbSet<CustomerStatus> CustomerStatus { get; set; } 
         public DbSet<CoinData> CoinDatas { get; set; }
         public DbSet<FavCoins> FavCoins { get; set; }
-        public DbSet<Config> Config { get; set; }   
+        public DbSet<Config> Config { get; set; }
+        public DbSet<testtable> testtables { get; set; }
 
     }
-}
+}   
