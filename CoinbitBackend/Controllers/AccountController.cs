@@ -4,6 +4,7 @@ using CoinbitBackend.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -21,24 +22,29 @@ namespace CoinbitBackend.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly IUserService _userService;
         private readonly IJwtAuthManager _jwtAuthManager;
+        private DBRepository _dBRepository;
 
         public IJwtAuthManager JwtAuthManager => _jwtAuthManager;
 
-        public AccountController(ILogger<AccountController> logger, IUserService userService, IJwtAuthManager jwtAuthManager)
+        public AccountController(ILogger<AccountController> logger, IUserService userService, IJwtAuthManager jwtAuthManager, DBRepository dBRepository)
         {
             _logger = logger;
             _userService = userService;
             _jwtAuthManager = jwtAuthManager;
+            _dBRepository = dBRepository;
         }
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public ActionResult Login([FromBody] LoginRequest request)
+        public async Task<object> Login([FromBody] LoginRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
+
+            if (string.IsNullOrWhiteSpace(request.UserName) || string.IsNullOrWhiteSpace(request.Password))
+                return Unauthorized("username and password must have value, both.");
 
             if (!_userService.IsValidUserCredentials(request.UserName, request.Password))
             {
@@ -54,14 +60,33 @@ namespace CoinbitBackend.Controllers
 
             var jwtResult = _jwtAuthManager.GenerateTokens(request.UserName, claims, DateTime.Now);
             _logger.LogInformation($"User [{request.UserName}] logged in the system.");
-            return Ok(new LoginResult
+            if(idrole.Item2 == "customer")
             {
-                UserID = idrole.Item1.ToString(),
-                UserName = request.UserName,
-                Role = idrole.Item2,
-                AccessToken = jwtResult.AccessToken,
-                RefreshToken = jwtResult.RefreshToken.TokenString
-            });
+                var cus = await _dBRepository.Customers.FirstOrDefaultAsync(a => a.user_id == idrole.Item1);
+                return Ok(new
+                {
+                    UserID = idrole.Item1.ToString(),
+                    UserName = request.UserName,
+                    Role = idrole.Item2,
+                    AccessToken = jwtResult.AccessToken,
+                    RefreshToken = jwtResult.RefreshToken.TokenString,
+                    firstName = cus.firstName,
+                    lastName = cus.lastName,
+                    StatusId = cus.StatusId
+                });
+            }
+            else
+            {
+                return Ok(new LoginResult
+                {
+                    UserID = idrole.Item1.ToString(),
+                    UserName = request.UserName,
+                    Role = idrole.Item2,
+                    AccessToken = jwtResult.AccessToken,
+                    RefreshToken = jwtResult.RefreshToken.TokenString
+                });
+            }
+            
         }
 
         [HttpGet("user")]

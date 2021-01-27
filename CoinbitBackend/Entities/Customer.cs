@@ -55,6 +55,11 @@ namespace CoinbitBackend.Entities
 
         [ForeignKey("StatusId")]   
         public CustomerStatus CustomerStatus { get; set; }
+
+        public int user_id { get; set; }
+
+        [ForeignKey("user_id")]
+        public User user { get; set; }  
     }
 }
     

@@ -87,19 +87,13 @@ namespace CoinbitBackend.Services
                     result = new Tuple<int, string>(user.Id, "admin");
                     break;
                 case 2:
-                    result = new Tuple<int, string>(user.Id, "gymboss");
+                    result = new Tuple<int, string>(user.Id, "customer");
                     break;
                 case 3:
-                    result = new Tuple<int, string>(user.Id, "gymstaff");
-                    break;
-                case 4:
-                    result = new Tuple<int, string>(user.Id, "client");
-                    break;
-                case 5:
-                    result = new Tuple<int, string>(user.Id, "coach");
+                    result = new Tuple<int, string>(user.Id, "acc");
                     break;
                 default:
-                    result = new Tuple<int, string>(user.Id, "client");
+                    result = new Tuple<int, string>(user.Id, "customer");
                     break;
             }
 

@@ -2,7 +2,9 @@
 using CoinbitBackend.Extension;
 using CoinbitBackend.Models;
 using CoinbitBackend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,13 +62,52 @@ namespace CoinbitBackend.Controllers
 
                 var result = _smsService.CheckSmsCode(mobile, code);
 
-                var cus = new Customer() { firstName = result.firstName, lastName = result.lastName, mobile = result.mobile, email = result.mail, StatusId = 1 };
+                var cususer = new User() { createDate = DateTime.Now, Password = string.Empty, UserName = mobile, UserRole = 2 };
+                await _dBRepository.Users.AddAsync(cususer);
+                await _dBRepository.SaveChangesAsync();
+
+                var cus = new Customer() { firstName = result.firstName, lastName = result.lastName, mobile = result.mobile, email = result.mail, StatusId = 1, user_id = cususer.Id };
                 await _dBRepository.Customers.AddAsync(cus);
                 await _dBRepository.SaveChangesAsync();
+
 
                 _smsService.RemoveCusFromList(mobile);
 
                 return new CoreResponse() { data = cus, isSuccess = true };
+            }
+            catch (Exception ex)
+            {
+                return new CoreResponse() { devMessage = ex.GetaAllMessages(), data = null, isSuccess = false };
+            }
+        }
+
+        [HttpPost("customerchangepwd")]        
+        public async Task<object> CustomerChangePassword(string mobile, string password)    
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+
+                var cus = await _dBRepository.Customers.FirstOrDefaultAsync(u => u.mobile == mobile);
+
+                if (cus == null)
+                    throw new Exception("customer is not exists");
+
+                var user = await _dBRepository.Users.FirstOrDefaultAsync(a => a.Id == cus.user_id);
+
+                if (user == null)
+                    throw new Exception("customer's user is not exists");
+
+                if (!string.IsNullOrWhiteSpace(user.Password))
+                    throw new Exception("this customer has been set password before and not in sign up step.");
+
+                user.Password = password;
+                await _dBRepository.SaveChangesAsync();
+
+                return new CoreResponse() { data = null, isSuccess = true,devMessage = "password changes successfully." };
             }
             catch (Exception ex)
             {
