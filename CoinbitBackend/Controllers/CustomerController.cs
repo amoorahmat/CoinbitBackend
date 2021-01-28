@@ -19,7 +19,7 @@ namespace CoinbitBackend.Controllers
         DBRepository _dBRepository;
         SmsService _smsService;
 
-        public CustomerController(DBRepository dBRepository,SmsService smsService)
+        public CustomerController(DBRepository dBRepository, SmsService smsService)
         {
             _dBRepository = dBRepository;
             _smsService = smsService;
@@ -51,7 +51,7 @@ namespace CoinbitBackend.Controllers
 
 
         [HttpPost("checkcustomersms")]
-        public async Task<object> CheckCustomerSms(string mobile,string code)
+        public async Task<object> CheckCustomerSms(string mobile, string code)
         {
             try
             {
@@ -81,8 +81,8 @@ namespace CoinbitBackend.Controllers
             }
         }
 
-        [HttpPost("customerchangepwd")]        
-        public async Task<object> CustomerChangePassword(string mobile, string password)    
+        [HttpPost("customerchangepwd")]
+        public async Task<object> CustomerChangePassword(string mobile, string password)
         {
             try
             {
@@ -107,7 +107,34 @@ namespace CoinbitBackend.Controllers
                 user.Password = password;
                 await _dBRepository.SaveChangesAsync();
 
-                return new CoreResponse() { data = null, isSuccess = true,devMessage = "password changes successfully." };
+                return new CoreResponse() { data = null, isSuccess = true, devMessage = "password changes successfully." };
+            }
+            catch (Exception ex)
+            {
+                return new CoreResponse() { devMessage = ex.GetaAllMessages(), data = null, isSuccess = false };
+            }
+        }
+
+
+        [HttpDelete("customerdelete_temporary")]
+        public async Task<object> CustomerDelete_Temporary(string mobile)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+
+                var cus = await _dBRepository.Customers.FirstOrDefaultAsync(a => a.mobile == mobile);
+                var user = await _dBRepository.Users.FirstOrDefaultAsync(a => a.UserName == mobile);
+
+                _dBRepository.Users.Remove(user);
+                _dBRepository.Customers.Remove(cus);
+
+                await _dBRepository.SaveChangesAsync();
+
+                return new CoreResponse() { data = null, isSuccess = true, devMessage = "customer deletes successfully." };
             }
             catch (Exception ex)
             {

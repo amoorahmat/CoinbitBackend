@@ -56,18 +56,8 @@ namespace CoinbitBackend.Services
                 return string.Empty;
             }
 
-            switch (user.UserRole)
-            {
-                case 1:
-                    return "admin";
-                case 2:
-                    return "customer";
-                case 3:
-                    return "acc";
-                default:
-                    return "customer";
-            }
-            
+            return GetRole(user.UserRole);
+
         }
 
         public Tuple<int, string> GetUserIDAndRole(string userName)
@@ -81,23 +71,18 @@ namespace CoinbitBackend.Services
                 return result;
             }
 
-            switch (user.UserRole)
-            {
-                case 1:
-                    result = new Tuple<int, string>(user.Id, "admin");
-                    break;
-                case 2:
-                    result = new Tuple<int, string>(user.Id, "customer");
-                    break;
-                case 3:
-                    result = new Tuple<int, string>(user.Id, "acc");
-                    break;
-                default:
-                    result = new Tuple<int, string>(user.Id, "customer");
-                    break;
-            }
+            return new Tuple<int, string>(user.Id, GetRole(user.UserRole));
+        }
 
-            return result;
+        private string GetRole(int roleid)
+        {
+            return roleid switch
+            {
+                1 => "admin",
+                2 => "customer",
+                3 => "acc",
+                _ => "customer",
+            };
         }
     }
 
