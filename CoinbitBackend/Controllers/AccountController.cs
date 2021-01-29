@@ -62,7 +62,7 @@ namespace CoinbitBackend.Controllers
             _logger.LogInformation($"User [{request.UserName}] logged in the system.");
             if(idrole.Item2 == "customer")
             {
-                var cus = await _dBRepository.Customers.FirstOrDefaultAsync(a => a.user_id == idrole.Item1);
+                var cus = await _dBRepository.Customers.AsNoTracking().FirstOrDefaultAsync(a => a.user_id == idrole.Item1);
                 return Ok(new
                 {
                     UserID = idrole.Item1.ToString(),
@@ -91,14 +91,31 @@ namespace CoinbitBackend.Controllers
 
         [HttpGet("user")]
         [Authorize]
-        public ActionResult GetCurrentUser()
+        public async Task<object> GetCurrentUser()
         {
-            return Ok(new LoginResult
+            var idrole = _userService.GetUserIDAndRole(User.Identity.Name);
+            if (idrole.Item2 == "customer")
             {
-                UserName = User.Identity.Name,
-                Role = User.FindFirst(ClaimTypes.Role)?.Value ?? string.Empty,
-                OriginalUserName = User.FindFirst("OriginalUserName")?.Value
-            });
+                var cus = await _dBRepository.Customers.AsNoTracking().FirstOrDefaultAsync(a => a.user_id == idrole.Item1);
+                return Ok(new
+                {
+                    UserID = idrole.Item1.ToString(),
+                    UserName = User.Identity.Name,
+                    Role = idrole.Item2,
+                    cus.firstName,
+                    cus.lastName,
+                    cus.StatusId
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    UserID = idrole.Item1.ToString(),
+                    UserName = User.Identity.Name,
+                    Role = idrole.Item2
+                });
+            }            
         }
 
         [HttpPost("logout")]
