@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Coravel" Version="4.0.2" />
     <PackageReference Include="Dapper" Version="2.0.78" />
     <PackageReference Include="KavenegarDotNetCore" Version="1.0.1" />

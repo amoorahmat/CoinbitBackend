@@ -43,5 +43,7 @@ namespace CoinbitBackend.Services
         public DbSet<Config> Config { get; set; }
         public DbSet<testtable> testtables { get; set; }
 
+        public DbSet<Bank> banks { get; set; }  
+
     }
 }   

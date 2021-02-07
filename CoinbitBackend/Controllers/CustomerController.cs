@@ -1,4 +1,5 @@
-﻿using CoinbitBackend.Entities;
+﻿using AutoMapper;
+using CoinbitBackend.Entities;
 using CoinbitBackend.Extension;
 using CoinbitBackend.Models;
 using CoinbitBackend.Services;
@@ -139,6 +140,128 @@ namespace CoinbitBackend.Controllers
             catch (Exception ex)
             {
                 return new CoreResponse() { devMessage = ex.GetaAllMessages(), data = null, isSuccess = false };
+            }
+        }
+
+
+        [HttpPut("updateCustomer")]
+        public async Task<ActionResult> UpdateCustomer([FromBody] Customer customer)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+
+                var cus = await _dBRepository.Customers.Where(l => l.Id == customer.Id).FirstOrDefaultAsync();
+                if (cus == null)
+                {
+                    throw new Exception("there is no customer with this id that passed in.");
+                }
+
+                //todo functional below code with extension method
+                var mapper = new AutoMapper.Mapper(new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<Customer, Customer>();
+                }));
+                mapper.Map(customer, cus);
+
+                await _dBRepository.SaveChangesAsync();
+
+                return Ok(new CoreResponse() { isSuccess = true, data = cus });
+
+            }
+            catch (Exception ex)
+            {
+                return Ok(new CoreResponse() { isSuccess = false, data = null, devMessage = ex.Message });
+            }
+        }
+
+        [HttpPut("customer_set_idcardpic")]
+        public async Task<ActionResult> CustomerSetIDCardPic(long cusid,string idcardpicname)   
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+
+                var cus = await _dBRepository.Customers.Where(l => l.Id == cusid).FirstOrDefaultAsync();
+                if (cus == null)
+                {
+                    throw new Exception("there is no customer with this id that passed in.");
+                }
+
+                cus.idcardpic = idcardpicname;
+
+                await _dBRepository.SaveChangesAsync();
+
+                return Ok(new CoreResponse() { isSuccess = true, data = cus });
+
+            }
+            catch (Exception ex)
+            {
+                return Ok(new CoreResponse() { isSuccess = false, data = null, devMessage = ex.Message });
+            }
+        }
+
+        [HttpPut("customer_set_bankcardpic")]
+        public async Task<ActionResult> CustomerSetBankCardPic(long cusid, string bankcardpic)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+
+                var cus = await _dBRepository.Customers.Where(l => l.Id == cusid).FirstOrDefaultAsync();
+                if (cus == null)
+                {
+                    throw new Exception("there is no customer with this id that passed in.");
+                }
+
+                cus.bankcardpic = bankcardpic;
+
+                await _dBRepository.SaveChangesAsync();
+
+                return Ok(new CoreResponse() { isSuccess = true, data = cus });
+
+            }
+            catch (Exception ex)
+            {
+                return Ok(new CoreResponse() { isSuccess = false, data = null, devMessage = ex.Message });
+            }
+        }
+
+        [HttpPut("customer_set_selfiepic")]
+        public async Task<ActionResult> CustomerSetSelfiePic(long cusid, string selfiepic)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+
+                var cus = await _dBRepository.Customers.Where(l => l.Id == cusid).FirstOrDefaultAsync();
+                if (cus == null)
+                {
+                    throw new Exception("there is no customer with this id that passed in.");
+                }
+
+                cus.selfiepic = selfiepic;
+
+                await _dBRepository.SaveChangesAsync();
+
+                return Ok(new CoreResponse() { isSuccess = true, data = cus });
+
+            }
+            catch (Exception ex)
+            {
+                return Ok(new CoreResponse() { isSuccess = false, data = null, devMessage = ex.Message });
             }
         }
     }

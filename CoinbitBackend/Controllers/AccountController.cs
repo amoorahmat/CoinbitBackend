@@ -1,6 +1,7 @@
 ﻿using CoinbitBackend.Infrastructure;
 using CoinbitBackend.Models;
 using CoinbitBackend.Services;
+using MD.PersianDateTime.Standard;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -66,13 +67,28 @@ namespace CoinbitBackend.Controllers
                 return Ok(new
                 {
                     UserID = idrole.Item1.ToString(),
-                    UserName = request.UserName,
+                    request.UserName,
                     Role = idrole.Item2,
-                    AccessToken = jwtResult.AccessToken,
+                    jwtResult.AccessToken,
                     RefreshToken = jwtResult.RefreshToken.TokenString,
-                    firstName = cus.firstName,
-                    lastName = cus.lastName,
-                    StatusId = cus.StatusId
+                    cus.Id,
+                    cus.firstName,
+                    cus.lastName,
+                    cus.StatusId,
+                    cus.fatherName,
+                    cus.mobile,
+                    cus.tel,
+                    cus.address,
+                    cus.postalCode,
+                    cus.nationalCode,
+                    cus.email,
+                    birthdate = new PersianDateTime(cus.birthDate),
+                    cus.card_number,
+                    cus.bank_id,
+                    cus.sheba_number,
+                    cus.idcardpic,
+                    cus.bankcardpic,
+                    cus.selfiepic
                 });
             }
             else

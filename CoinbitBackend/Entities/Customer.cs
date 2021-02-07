@@ -59,7 +59,24 @@ namespace CoinbitBackend.Entities
         public int user_id { get; set; }
 
         [ForeignKey("user_id")]
-        public User user { get; set; }  
+        public User user { get; set; }
+
+        public string idcardpic { get; set; }
+        
+        public string bankcardpic { get; set; }
+        
+        public string selfiepic { get; set; }
+
+        public int? bank_id { get; set; }
+
+        [ForeignKey("bank_id")]
+        public Bank bank { get; set; }
+
+        [StringLength(100)]
+        public string card_number { get; set; }
+
+        [StringLength(100)]
+        public string sheba_number { get; set; }
+
     }
-}
-    
+}    
