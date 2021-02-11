@@ -20,7 +20,11 @@ namespace CoinbitBackend
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>().UseUrls("http://*:8585");//, "https://*:5001"
+                    webBuilder.UseStartup<Startup>().UseUrls("http://*:8585")
+                    .UseKestrel(options =>
+                    {
+                        options.Limits.MaxRequestBodySize = long.MaxValue;
+                    });
                 });
     }
 }

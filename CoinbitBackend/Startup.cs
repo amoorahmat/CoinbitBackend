@@ -100,12 +100,12 @@ namespace CoinbitBackend
                 });
             });
 
-            services.AddCors();
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy("AllowAll",
-            //        builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
-            //});
+            //services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
+            });
 
         }
 

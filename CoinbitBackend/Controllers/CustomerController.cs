@@ -144,8 +144,9 @@ namespace CoinbitBackend.Controllers
         }
 
 
-        [HttpPut("updateCustomer")]
-        public async Task<ActionResult> UpdateCustomer([FromBody] Customer customer)
+        [HttpPost("updateCustomer")]
+        [Authorize]
+        public async Task<ActionResult> UpdateCustomer([FromBody] CustomerUpdateModel customer)
         {
             try
             {
@@ -154,18 +155,18 @@ namespace CoinbitBackend.Controllers
                     return BadRequest();
                 }
 
-                var cus = await _dBRepository.Customers.Where(l => l.Id == customer.Id).FirstOrDefaultAsync();
+                var cus = await _dBRepository.Customers.Where(l => l.Id == customer.customer_id).FirstOrDefaultAsync();
                 if (cus == null)
                 {
                     throw new Exception("there is no customer with this id that passed in.");
                 }
 
-                //todo functional below code with extension method
-                var mapper = new AutoMapper.Mapper(new MapperConfiguration(cfg =>
-                {
-                    cfg.CreateMap<Customer, Customer>();
-                }));
-                mapper.Map(customer, cus);
+                cus.fatherName = customer.father_name;
+                cus.nationalCode = customer.national_code;
+                cus.birthDate = customer.birth_date;
+                cus.bank_id = customer.bank_id;
+                cus.card_number = customer.card_number;
+                cus.tel = customer.tel;
 
                 await _dBRepository.SaveChangesAsync();
 
@@ -178,7 +179,8 @@ namespace CoinbitBackend.Controllers
             }
         }
 
-        [HttpPut("customer_set_idcardpic")]
+        [HttpPost("customer_set_idcardpic")]
+        [Authorize]
         public async Task<ActionResult> CustomerSetIDCardPic(long cusid,string idcardpicname)   
         {
             try
@@ -207,7 +209,8 @@ namespace CoinbitBackend.Controllers
             }
         }
 
-        [HttpPut("customer_set_bankcardpic")]
+        [HttpPost("customer_set_bankcardpic")]
+        [Authorize]
         public async Task<ActionResult> CustomerSetBankCardPic(long cusid, string bankcardpic)
         {
             try
@@ -236,7 +239,8 @@ namespace CoinbitBackend.Controllers
             }
         }
 
-        [HttpPut("customer_set_selfiepic")]
+        [HttpPost("customer_set_selfiepic")]
+        [Authorize]
         public async Task<ActionResult> CustomerSetSelfiePic(long cusid, string selfiepic)
         {
             try
@@ -258,6 +262,56 @@ namespace CoinbitBackend.Controllers
 
                 return Ok(new CoreResponse() { isSuccess = true, data = cus });
 
+            }
+            catch (Exception ex)
+            {
+                return Ok(new CoreResponse() { isSuccess = false, data = null, devMessage = ex.Message });
+            }
+        }
+
+        [HttpGet("get")]
+        [Authorize(Roles ="customer")]
+        public async Task<ActionResult> GetCustomer()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+                var user_id = _dBRepository.Users.AsNoTracking().FirstOrDefault(a => a.UserName.ToLower() == User.Identity.Name.ToLower())?.Id;
+                var cus = await _dBRepository.Customers.AsNoTracking().Where(l => l.user_id == user_id).FirstOrDefaultAsync();
+                if (cus == null)
+                {
+                    throw new Exception("there is no customer with this id that passed in.");
+                }
+
+                return Ok(new CoreResponse() { isSuccess = true, data = cus });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new CoreResponse() { isSuccess = false, data = null, devMessage = ex.Message });
+            }
+        }
+
+        [HttpGet("getforadmin")]
+        [Authorize(Roles = "admin,acc")]
+        public async Task<ActionResult> GetCustomer(long customer_id)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+                
+                var cus = await _dBRepository.Customers.AsNoTracking().Where(l => l.user_id == customer_id).FirstOrDefaultAsync();
+                if (cus == null)
+                {
+                    throw new Exception("there is no customer with this id that passed in.");
+                }
+
+                return Ok(new CoreResponse() { isSuccess = true, data = cus });
             }
             catch (Exception ex)
             {
