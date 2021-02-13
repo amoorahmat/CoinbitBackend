@@ -39,9 +39,12 @@ namespace CoinbitBackend.Controllers
                 //var cus = new Customer() { firstName = request.firstName, lastName = request.lastName, mobile = request.mobile, email = request.mail };
                 //await _dBRepository.Customers.AddAsync(cus);
                 //await _dBRepository.SaveChangesAsync();
-
+                var cus = await _dBRepository.Customers.AnyAsync(a => a.mobile == request.mobile);
+                if (cus)
+                {
+                    throw new Exception("there is already an exsiting customer with this mobile: " + request.mobile);
+                }
                 await _smsService.SendSms(request);
-
                 return new CoreResponse() { data = request, isSuccess = true };
             }
             catch (Exception ex)
@@ -311,6 +314,27 @@ namespace CoinbitBackend.Controllers
                     throw new Exception("there is no customer with this id that passed in.");
                 }
 
+                return Ok(new CoreResponse() { isSuccess = true, data = cus });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new CoreResponse() { isSuccess = false, data = null, devMessage = ex.Message });
+            }
+        }
+
+        [HttpGet("getall")]
+        [Authorize(Roles = "admin,acc")]
+        public async Task<ActionResult> GetAllCustomers()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+
+                var cus = await _dBRepository.Customers.AsNoTracking().ToListAsync();
+                
                 return Ok(new CoreResponse() { isSuccess = true, data = cus });
             }
             catch (Exception ex)
