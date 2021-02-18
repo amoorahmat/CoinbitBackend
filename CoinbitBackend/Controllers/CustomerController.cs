@@ -341,8 +341,8 @@ namespace CoinbitBackend.Controllers
                 var cus = await dBDapperRepository.RunQueryAsync<CustomerReportModel>(query);
 
                 //var cus = await _dBRepository.Customers.AsNoTracking().ToListAsync();
-                
-                return Ok(new CoreResponse() { isSuccess = true, data = cus });
+
+                return Ok(new CoreResponse() { isSuccess = true, data = cus, total_items = cus.First()?.row_count, current_page = page, total_pages = (cus.First()?.row_count / pagesize) + 1 });
             }
             catch (Exception ex)
             {
