@@ -19,11 +19,13 @@ namespace CoinbitBackend.Controllers
     {
         DBRepository _dBRepository;
         SmsService _smsService;
+        private DBDapperRepository dBDapperRepository;
 
-        public CustomerController(DBRepository dBRepository, SmsService smsService)
+        public CustomerController(DBRepository dBRepository, SmsService smsService, DBDapperRepository dBDapperRepository)
         {
             _dBRepository = dBRepository;
             _smsService = smsService;
+            this.dBDapperRepository = dBDapperRepository;
         }
 
         [HttpPost("registerCustomer")]
@@ -324,7 +326,7 @@ namespace CoinbitBackend.Controllers
 
         [HttpGet("getall")]
         [Authorize(Roles = "admin,acc")]
-        public async Task<ActionResult> GetAllCustomers()
+        public async Task<ActionResult> GetAllCustomers(string first_name,string last_name,string mobile, int page = 1, int pagesize = 10)
         {
             try
             {
@@ -333,7 +335,11 @@ namespace CoinbitBackend.Controllers
                     return BadRequest();
                 }
 
-                var cus = await _dBRepository.Customers.AsNoTracking().ToListAsync();
+                var query = $" select count(1) OVER() AS row_count,* from public.\"Customers\" where 1 = 1 and \"firstName\" like '%{first_name}%' and \"lastName\" like '%{last_name}%' and mobile like '%{mobile}%' ORDER BY \"Id\"  LIMIT {pagesize}  OFFSET ({pagesize} * ({page}-1)) ";
+
+                var cus = await dBDapperRepository.RunQueryAsync<Customer>(query);
+
+                //var cus = await _dBRepository.Customers.AsNoTracking().ToListAsync();
                 
                 return Ok(new CoreResponse() { isSuccess = true, data = cus });
             }
