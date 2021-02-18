@@ -2,6 +2,7 @@
 using CoinbitBackend.Entities;
 using CoinbitBackend.Extension;
 using CoinbitBackend.Models;
+using CoinbitBackend.Models.pagination_reports;
 using CoinbitBackend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -337,7 +338,7 @@ namespace CoinbitBackend.Controllers
 
                 var query = $" select count(1) OVER() AS row_count,* from public.\"Customers\" where 1 = 1 and \"firstName\" like '%{first_name}%' and \"lastName\" like '%{last_name}%' and mobile like '%{mobile}%' ORDER BY \"Id\"  LIMIT {pagesize}  OFFSET ({pagesize} * ({page}-1)) ";
 
-                var cus = await dBDapperRepository.RunQueryAsync<Customer>(query);
+                var cus = await dBDapperRepository.RunQueryAsync<CustomerReportModel>(query);
 
                 //var cus = await _dBRepository.Customers.AsNoTracking().ToListAsync();
                 
