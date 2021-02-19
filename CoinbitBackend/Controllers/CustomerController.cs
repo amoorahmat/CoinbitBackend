@@ -325,9 +325,9 @@ namespace CoinbitBackend.Controllers
             }
         }
 
-        [HttpGet("getall")]
+        [HttpGet("getallpaginate")]
         [Authorize(Roles = "admin,acc")]
-        public async Task<ActionResult> GetAllCustomers(string first_name,string last_name,string mobile, int page = 1, int pagesize = 10)
+        public async Task<ActionResult> GetAllCustomersPaginate(string first_name,string last_name,string mobile, int page = 1, int pagesize = 10)
         {
             try
             {
@@ -343,6 +343,29 @@ namespace CoinbitBackend.Controllers
                 //var cus = await _dBRepository.Customers.AsNoTracking().ToListAsync();
 
                 return Ok(new CoreResponse() { isSuccess = true, data = cus, total_items = cus.First()?.row_count, current_page = page, total_pages = (cus.First()?.row_count / pagesize) + 1 });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new CoreResponse() { isSuccess = false, data = null, devMessage = ex.Message });
+            }
+        }
+
+        [HttpGet("getall")]
+        [Authorize(Roles = "admin,acc")]
+        public async Task<ActionResult> GetAllCustomers()
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+                
+
+                var cus = await _dBRepository.Customers.AsNoTracking().ToListAsync();
+
+
+                return Ok(new CoreResponse() { isSuccess = true, data = cus });
             }
             catch (Exception ex)
             {
