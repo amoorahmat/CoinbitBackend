@@ -362,7 +362,7 @@ namespace CoinbitBackend.Controllers
                 }
                 
 
-                var cus = await _dBRepository.Customers.AsNoTracking().ToListAsync();
+                var cus = await _dBRepository.Customers.Include(a=>a.CustomerStatus).AsNoTracking().ToListAsync();
 
 
                 return Ok(new CoreResponse() { isSuccess = true, data = cus });
