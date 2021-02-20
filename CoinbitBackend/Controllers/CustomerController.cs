@@ -327,7 +327,7 @@ namespace CoinbitBackend.Controllers
 
         [HttpGet("getallpaginate")]
         [Authorize(Roles = "admin,acc")]
-        public async Task<ActionResult> GetAllCustomersPaginate(string first_name,string last_name,string mobile, int page = 1, int pagesize = 10)
+        public async Task<ActionResult> GetAllCustomersPaginate(string first_name,string last_name,string mobile, int status_id, int page = 1, int pagesize = 10)
         {
             try
             {
@@ -336,7 +336,7 @@ namespace CoinbitBackend.Controllers
                     return BadRequest();
                 }
 
-                var query = $" select count(1) OVER() AS row_count,* from public.\"Customers\" where 1 = 1 and \"firstName\" like '%{first_name}%' and \"lastName\" like '%{last_name}%' and mobile like '%{mobile}%' ORDER BY \"Id\"  LIMIT {pagesize}  OFFSET ({pagesize} * ({page}-1)) ";
+                var query = $" select count(1) OVER() AS row_count,* from public.\"Customers\" where 1 = 1 and \"firstName\" like '%{first_name}%' and \"lastName\" like '%{last_name}%' and mobile like '%{mobile}%' " + (status_id > 0 ? $" and \"StatusId\"= {status_id} " : string.Empty) + $" ORDER BY \"Id\"  LIMIT {pagesize}  OFFSET ({pagesize} * ({page}-1)) ";
 
                 var cus = await dBDapperRepository.RunQueryAsync<CustomerReportModel>(query);
 
@@ -352,7 +352,7 @@ namespace CoinbitBackend.Controllers
 
         [HttpGet("getall")]
         [Authorize(Roles = "admin,acc")]
-        public async Task<ActionResult> GetAllCustomers()
+        public async Task<ActionResult> GetAllCustomers(string first_name, string last_name, string mobile, int status_id)
         {
             try
             {
@@ -360,9 +360,11 @@ namespace CoinbitBackend.Controllers
                 {
                     return BadRequest();
                 }
-                
 
-                var cus = await _dBRepository.Customers.Include(a=>a.CustomerStatus).AsNoTracking().ToListAsync();
+
+                var query = $" select count(1) OVER() AS row_count,* from public.\"Customers\" where 1 = 1 and \"firstName\" like '%{first_name}%' and \"lastName\" like '%{last_name}%' and mobile like '%{mobile}%' " + (status_id > 0 ? $" and \"StatusId\"= {status_id} " : string.Empty) + $" ORDER BY \"Id\"  LIMIT {1000000}  OFFSET ({1000000} * ({1}-1)) ";
+
+                var cus = await dBDapperRepository.RunQueryAsync<CustomerReportModel>(query);
 
 
                 return Ok(new CoreResponse() { isSuccess = true, data = cus });
