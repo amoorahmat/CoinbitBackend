@@ -78,5 +78,6 @@ namespace CoinbitBackend.Entities
         [StringLength(100)]
         public string sheba_number { get; set; }
 
+        public int verify_user_id { get; set; } 
     }
 }    

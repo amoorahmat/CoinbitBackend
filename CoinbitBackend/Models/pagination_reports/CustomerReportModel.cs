@@ -8,6 +8,7 @@ namespace CoinbitBackend.Models.pagination_reports
 {
     public class CustomerReportModel : Customer
     {
-        public int row_count { get; set; }  
+        public int row_count { get; set; }
+        public string bank_title { get; set; }  
     }
 }
