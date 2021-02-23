@@ -396,6 +396,7 @@ namespace CoinbitBackend.Controllers
                 }
 
                 cus.StatusId = 2;
+                cus.isActive = true;
                 cus.verify_user_id = (user != null) ? user.Id : 0;
 
                 await _dBRepository.SaveChangesAsync();
