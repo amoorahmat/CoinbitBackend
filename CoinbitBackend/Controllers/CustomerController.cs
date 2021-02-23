@@ -336,7 +336,7 @@ namespace CoinbitBackend.Controllers
                     return BadRequest();
                 }
 
-                var query = $" select count(1) OVER() AS row_count,c.*,b.title as bank_title from public.\"Customers\" c join public.banks b on c.bank_id = b.\"Id\" where 1 = 1 and \"firstName\" like '%{first_name}%' and \"lastName\" like '%{last_name}%' and mobile like '%{mobile}%' " + (status_id > 0 ? $" and \"StatusId\"= {status_id} " : string.Empty) + $" ORDER BY c.\"Id\"  LIMIT {pagesize}  OFFSET ({pagesize} * ({page}-1)) ";
+                var query = $" select count(1) OVER() AS row_count,c.*,b.title as bank_title from public.\"Customers\" c left join public.banks b on c.bank_id = b.\"Id\" where 1 = 1 and \"firstName\" like '%{first_name}%' and \"lastName\" like '%{last_name}%' and mobile like '%{mobile}%' " + (status_id > 0 ? $" and \"StatusId\"= {status_id} " : string.Empty) + $" ORDER BY c.\"Id\"  LIMIT {pagesize}  OFFSET ({pagesize} * ({page}-1)) ";
 
                 var cus = await dBDapperRepository.RunQueryAsync<CustomerReportModel>(query);
 
@@ -362,7 +362,7 @@ namespace CoinbitBackend.Controllers
                 }
 
 
-                var query = $" select count(1) OVER() AS row_count,c.*,b.title as bank_title from public.\"Customers\" c join public.banks b on c.bank_id = b.\"Id\" where 1 = 1 and \"firstName\" like '%{first_name}%' and \"lastName\" like '%{last_name}%' and mobile like '%{mobile}%' " + (status_id > 0 ? $" and \"StatusId\"= {status_id} " : string.Empty) + $" ORDER BY c.\"Id\"  LIMIT {1000000}  OFFSET ({1000000} * ({1}-1)) ";
+                var query = $" select count(1) OVER() AS row_count,c.*,b.title as bank_title from public.\"Customers\" c left join public.banks b on c.bank_id = b.\"Id\" where 1 = 1 and \"firstName\" like '%{first_name}%' and \"lastName\" like '%{last_name}%' and mobile like '%{mobile}%' " + (status_id > 0 ? $" and \"StatusId\"= {status_id} " : string.Empty) + $" ORDER BY c.\"Id\"  LIMIT {1000000}  OFFSET ({1000000} * ({1}-1)) ";
 
                 var cus = await dBDapperRepository.RunQueryAsync<CustomerReportModel>(query);
 
